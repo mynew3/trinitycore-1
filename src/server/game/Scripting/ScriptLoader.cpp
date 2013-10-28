@@ -1411,6 +1411,9 @@ void AddSC_shaman_bot();
 void AddSC_warlock_bot();
 void AddSC_warrior_bot();
 void AddSC_script_bot_commands();
+//advanced
+void AddSC_BotQuests_chapter1();
+//end Bots
 #endif
 
 void AddCustomScripts()
@@ -1431,5 +1434,8 @@ AddSC_CPWS_Transmogrification();
     AddSC_warlock_bot();
     AddSC_warrior_bot();
     AddSC_script_bot_commands();
+    //advanced
+    AddSC_BotQuests_chapter1();
+    //end Bots
 #endif
 }

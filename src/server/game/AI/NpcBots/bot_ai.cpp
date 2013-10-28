@@ -2120,26 +2120,19 @@ void bot_minion_ai::UpdateMountedState()
     if (GetBotCommandState() != COMMAND_FOLLOW)
         return;
 
-    //DEBUG
-    if (master->IsMounted() && me->IsMounted())
-    {
-        if ((master->HasAuraType(SPELL_AURA_FLY) || master->HasUnitMovementFlag(MOVEMENTFLAG_CAN_FLY) || master->HasUnitMovementFlag(MOVEMENTFLAG_FLYING)))
-        {
-            //creature don't benefit from mount flight speed, so force it
-            if (me->GetSpeed(MOVE_FLIGHT) != master->GetSpeed(MOVE_FLIGHT)/2)
-            me->SetSpeed(MOVE_FLIGHT, master->GetSpeed(MOVE_FLIGHT)/2);
-        }
-        return;
-    }
     bool aura = me->HasAuraType(SPELL_AURA_MOUNTED);
     bool mounted = me->IsMounted();
     if ((!master->IsMounted() || aura != mounted || (me->IsInCombat() && opponent)) && (aura || mounted))
     {
+        const_cast<CreatureTemplate*>(me->GetCreatureTemplate())->InhabitType &= ~INHABIT_AIR;
         me->RemoveAurasByType(SPELL_AURA_MOUNTED);
+        //me->RemoveUnitMovementFlag(MOVEMENTFLAG_HOVER);
+        me->SetCanFly(false);
+        me->SetDisableGravity(false);
+        me->RemoveUnitMovementFlag(MOVEMENTFLAG_FALLING);
         me->Dismount();
         return;
     }
-    //END DEBUG
     if (me->IsInCombat() || IsCasting() || me->HasUnitMovementFlag(MOVEMENTFLAG_SWIMMING)) //IsInWater() is too much calculations
         return;
     //fly
@@ -3232,7 +3225,22 @@ void bot_ai::OnSpellHit(Unit* /*caster*/, SpellInfo const* spell)
         uint32 auraname = spell->Effects[i].ApplyAuraName;
         //remove pet on mount
         if (auraname == SPELL_AURA_MOUNTED)
+        {
             me->SetBotsPetDied();
+            if (master->HasAuraType(SPELL_AURA_MOD_INCREASE_VEHICLE_FLIGHT_SPEED) ||
+                master->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED))
+            {
+                const_cast<CreatureTemplate*>(me->GetCreatureTemplate())->InhabitType |= INHABIT_AIR;
+                //me->AddUnitMovementFlag(MOVEMENTFLAG_HOVER);
+                me->SetCanFly(true);
+                me->SetDisableGravity(true);
+                me->SetSpeed(MOVE_FLIGHT, master->GetSpeedRate(MOVE_FLIGHT) * 1.37f);
+                me->SetSpeed(MOVE_RUN, master->GetSpeedRate(MOVE_FLIGHT) * 1.37f);
+            }
+            else
+                me->SetSpeed(MOVE_RUN, master->GetSpeedRate(MOVE_RUN) * 1.25f);
+        }
+
         //update stats
         if (auraname == SPELL_AURA_MOD_STAT)
         {
@@ -3448,34 +3456,34 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
             subMenu = true;
 
             //general
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "让我瞧瞧你的背包　", 6101, GOSSIP_ACTION_INFO_DEF + 1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Show me your inventory", 6101, GOSSIP_ACTION_INFO_DEF + 1);
             //player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Create itemset", 6101, GOSSIP_ACTION_INFO_DEF + 1);
 
             //weapons
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "主手　", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_MAINHAND);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Main hand...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_MAINHAND);
             if (CanUseOffHand())
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "副手　", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_OFFHAND);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Off-hand...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_OFFHAND);
             if (CanUseRanged())
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "远程武器　", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_RANGED);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Ranged...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_RANGED);
 
             //armor
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "头部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_HEAD);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "护肩", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_SHOULDERS);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "胸部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_CHEST);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "腰部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_WAIST);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "腿部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_LEGS);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "脚　", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FEET);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "手腕", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_WRIST);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "手　", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_HANDS);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "背部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_BACK);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "衬衫", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_BODY);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "手指", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FINGER1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "手指", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FINGER2);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "饰品", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_TRINKET1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "饰品", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_TRINKET2);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "颈部", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_NECK);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Head...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_HEAD);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Shoulders...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_SHOULDERS);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Chest...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_CHEST);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Waist...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_WAIST);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Legs...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_LEGS);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Feet...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FEET);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Wrist...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_WRIST);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Hands...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_HANDS);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Back...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_BACK);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Shirt...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_BODY);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Finger1...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FINGER1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Finger2...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_FINGER2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Trinket1...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_TRINKET1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Trinket2...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_TRINKET2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Neck...", 6102, GOSSIP_ACTION_INFO_DEF + BOT_SLOT_NECK);
 
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "返回", 1, GOSSIP_ACTION_INFO_DEF + 1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "BACK.", 1, GOSSIP_ACTION_INFO_DEF + 1);
 
             break;
         }
@@ -3495,7 +3503,7 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
                     if (ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemId))
                         _AddItemTemplateLink(master, proto, msg);
                     else
-                        msg << "未知物品";
+                        msg << "Unknown item";
                     msg << " in slot " << uint32(i) << " (" << _GetNameForSlot(i + 1) << ')';
                     if (i < BOT_SLOT_RANGED && einfo && einfo->ItemEntry[i] == itemId)
                         msg << " |cffe6cc80|h[!standard item!]|h|r";
@@ -3555,34 +3563,34 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
             //s2.2.0 add current item (with return)
             uint8 slot = action - (GOSSIP_ACTION_INFO_DEF + 1);
             std::ostringstream str;
-            str << "装备中: ";
+            str << "Equipped: ";
             if (uint32 itemId = master->GetBotEquip(me, slot))
             {
                 if (ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemId))
                     _AddItemTemplateLink(master, proto, str);
                 else
-                    str << "未知物品";
+                    str << "unknown item";
 
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, str.str().c_str(), 6151, action);
             }
             else
             {
-                str << "没有";
+                str << "nothing";
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, str.str().c_str(), 6102, action);
             }
 
             //s2.2.1 add unequip option if have weapon
             if (action - GOSSIP_ACTION_INFO_DEF <= BOT_SLOT_RANGED)
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "使用你原始的装备", 6104, action);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Use your old equipment", 6104, action);
 
             //s2.2.2 add unequip option if have weapon
             if (master->GetBotEquip(me, action - (GOSSIP_ACTION_INFO_DEF + 1)))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "取下这个", 6103, action);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Unequip it", 6103, action);
 
             //s2.2.3a: add an empty submenu with info if no items are found
             if (itemList.empty())
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "我没有任何装备给你了", 0, GOSSIP_ACTION_INFO_DEF + 1);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Hm... I have nothing to give you", 0, GOSSIP_ACTION_INFO_DEF + 1);
             }
             else
             {
@@ -3604,7 +3612,7 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
                 }
             }
 
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "返回", 6100, GOSSIP_ACTION_INFO_DEF + 2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "BACK", 6100, GOSSIP_ACTION_INFO_DEF + 2);
 
             //TC_LOG_ERROR(LOG_FILTER_PLAYER, "OnGossipSelect(bot): added %u item(s) to list of %s (requester: %s)",
             //    counter, me->GetName().c_str(), player->GetName().c_str());
@@ -3619,7 +3627,7 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
                     me->GetBotClass() == CLASS_ROGUE || (me->GetBotClass() == CLASS_SHAMAN && isTwoHander()) ||
                     me->GetBotClass() == CLASS_PALADIN || me->GetBotClass() == CLASS_HUNTER)
                 {
-                    me->MonsterSay("怎么回事？我是赤手空拳的，你让我去战斗？", LANG_UNIVERSAL, player->GetGUID());
+                    me->MonsterSay("What, with my bare hands? No way", LANG_UNIVERSAL, player->GetGUID());
                     break;
                 }
             }
@@ -3627,7 +3635,7 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
             {
                 if (me->GetBotClass() == CLASS_ROGUE)
                 {
-                    me->MonsterSay("绝不!", LANG_UNIVERSAL, player->GetGUID());
+                    me->MonsterSay("No. Never", LANG_UNIVERSAL, player->GetGUID());
                     break;
                 }
             }
@@ -3635,7 +3643,7 @@ bool bot_minion_ai::OnGossipSelect(Player* player, Creature* creature, uint32 se
             {
                 if (me->GetBotClass() == CLASS_HUNTER)
                 {
-                    me->MonsterSay("哈哈，很搞笑...", LANG_UNIVERSAL, player->GetGUID());
+                    me->MonsterSay("Yeah, very funny...", LANG_UNIVERSAL, player->GetGUID());
                     break;
                 }
             }
@@ -4732,4 +4740,43 @@ void bot_ai::_LocalizeGameObject(Player* forPlayer, std::string &gameobjectName,
         if (Utf8FitTo(title, wnamepart))
             gameobjectName = title;
     }
+}
+
+void bot_ai::BotSpeak(std::string const& text, uint8 msgtype, uint32 language, uint64 speaker, uint64 receiver)
+{
+    if (msgtype == CHAT_MSG_WHISPER)
+        language = LANG_UNIVERSAL;
+
+    std::string _text(text);
+    //sScriptMgr->OnPlayerChat(this, CHAT_MSG_SAY, language, _text);
+
+    WorldPacket data(SMSG_MESSAGECHAT, 200);
+    //BuildPlayerChat(&data, msgType, _text, language);
+    data << uint8(msgtype);
+    data << uint32(language);
+    data << uint64(speaker);
+    data << uint32(0);                 // constant unknown time
+    data << uint64(speaker);
+    data << uint32(text.length() + 1);
+    data << text;
+    data << uint8(0);
+
+    if (msgtype == CHAT_MSG_WHISPER)
+    {
+        ASSERT(receiver || "BotSpeak(): no receiver for whisper!");
+        ASSERT(IS_PLAYER_GUID(receiver) || "BotSpeak(): whisper receiver is not a player!");
+
+        if (Player* res = ObjectAccessor::FindPlayer(receiver))
+            res->GetSession()->SendPacket(&data);
+    }
+    else
+    {
+        if (Unit* snd = ObjectAccessor::FindUnit(speaker))
+        {
+            float dist = std::max<float>(sWorld->getFloatConfig(CONFIG_LISTEN_RANGE_SAY), sWorld->getFloatConfig(CONFIG_LISTEN_RANGE_YELL) * 0.5f);
+            Trinity::MessageDistDeliverer notifier(snd, &data, dist, false);
+            snd->VisitNearbyWorldObject(dist, notifier);
+        }
+    }
+    //SendMessageToSetInRange(&data, sWorld->getFloatConfig(CONFIG_LISTEN_RANGE_SAY), true);
 }

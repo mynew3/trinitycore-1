@@ -715,7 +715,9 @@ class Creature : public Unit, public GridObject<Creature>, public MapObject
         bool Unequip(uint8 slot) const;
         bool Equip(uint32 itemId, uint8 slot) const;
         bool ResetEquipment(uint8 slot) const;
-        //Bot commands
+        //advanced
+        bool IsQuestBot() const;
+        //End Bot commands
 
 
         // Handling caster facing during spellcast
@@ -781,6 +783,7 @@ class Creature : public Unit, public GridObject<Creature>, public MapObject
         uint8 m_bot_class;
         bool m_canUpdate;
         //end bot system
+
         void ForcedDespawn(uint32 timeMSToDespawn = 0);
 
         //WaypointMovementGenerator vars

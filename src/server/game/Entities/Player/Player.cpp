@@ -3797,6 +3797,9 @@ Creature* Player::GetNPCIfCanInteractWith(uint64 guid, uint32 npcflagmask)
 
     // not enemy
     if (creature->IsHostileTo(this))
+    //npcbot
+    if (!creature->IsQuestBot())
+    //end npcbot
         return NULL;
 
     // not unfriendly

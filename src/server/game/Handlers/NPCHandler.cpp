@@ -310,6 +310,23 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket& recvData)
         _player->GetBotHelper()->OnGossipHello(_player);
         return;
     }
+    else if (IS_CREATURE_GUID(guid))
+    {
+        if (Creature* qBot = ObjectAccessor::GetCreatureOrPetOrVehicle(*_player, guid))
+        {
+            if (qBot->IsQuestBot() &&
+                (_player->IsAlive() || qBot->GetCreatureTemplate()->type_flags & CREATURE_TYPEFLAGS_GHOST) &&
+                (qBot->IsAlive() || (qBot->GetCreatureTemplate()->type_flags & CREATURE_TYPEFLAGS_DEAD_INTERACT)))
+            {
+                if (!sScriptMgr->OnGossipHello(_player, qBot))
+                {
+                    TC_LOG_ERROR(LOG_FILTER_NETWORKIO, "WORLD: HandleGossipHelloOpcode - qBot %s (Entry: %u) returned false on gossip hello.",
+                        qBot->GetName().c_str(), qBot->GetEntry());
+                }
+                return;
+            }
+        }
+    }
     //end Bot
 
     Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);

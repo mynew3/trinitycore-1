@@ -168,7 +168,8 @@ m_creatureInfo(NULL), m_creatureData(NULL), m_path_id(0), m_formation(NULL)
     ResetLootMode(); // restore default loot mode
     TriggerJustRespawned = false;
     m_isTempWorldObject = false;
-
+    _focusSpell = NULL;
+    
     //bot
     m_bot_owner = NULL;
     m_creature_owner = NULL;
@@ -176,7 +177,7 @@ m_creatureInfo(NULL), m_creatureData(NULL), m_path_id(0), m_formation(NULL)
     m_bot_class = CLASS_NONE;
     bot_AI = NULL;
     m_canUpdate = true;
-    _focusSpell = NULL;
+    //end bot
 }
 
 Creature::~Creature()
@@ -2875,6 +2876,13 @@ bool Creature::Equip(uint32 itemId, uint8 slot) const
 bool Creature::ResetEquipment(uint8 slot) const
 {
     return bot_AI && bot_AI->ResetEquipment(slot);
+}
+
+bool Creature::IsQuestBot() const
+{
+    return
+        m_creatureInfo->Entry >= 71000 && m_creatureInfo->Entry < 72000 &&
+        (m_creatureInfo->unit_flags2 & UNIT_FLAG2_ALLOW_ENEMY_INTERACT);
 }
 
 void Creature::SetTarget(uint64 guid)

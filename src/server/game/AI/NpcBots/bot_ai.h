@@ -251,6 +251,8 @@ class bot_ai : public ScriptedAI
         virtual bool Equip(uint32 /*itemId*/, uint8 /*slot*/) { return false; }
         virtual bool ResetEquipment(uint8 /*slot*/) { return false; }
 
+        static void BotSpeak(std::string const& text, uint8 msgtype, uint32 language, uint64 sender, uint64 receiver);
+
     protected:
         static uint32 InitSpell(Unit* caster, uint32 spell);
 
