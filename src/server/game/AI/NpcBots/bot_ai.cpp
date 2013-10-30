@@ -3046,7 +3046,7 @@ void bot_pet_ai::_OnHealthUpdate(uint8 /*petType*/, uint8 mylevel) const
     hp_add -= miscVal;
     uint32 m_totalhp = m_basehp + hp_add;
     if (master->GetBotTankGuid() == me->GetGUID())
-        m_totalhp = (m_totalhp * 135) / 100; //35% hp bonus for tanks
+        m_totalhp = (m_totalhp * 250) / 100; //150% hp bonus for tanks
     me->SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, float(m_totalhp));
     me->UpdateMaxHealth(); //will use values set (update base health and buffs)
     me->SetHealth(uint32(0.5f + float(me->GetMaxHealth()) * pct / 100.f)); //restore pct

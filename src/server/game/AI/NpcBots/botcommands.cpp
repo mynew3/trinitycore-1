@@ -107,12 +107,12 @@ public:
                     if (Unit* u = ObjectAccessor::FindUnit(selection))
                     {
                         bool isabot = u->GetTypeId() == TYPEID_UNIT && u->ToCreature()->GetIAmABot();
-                        if (isabot && group->GetMemberSlots().size() < 3 && handler->GetSession()->GetSecurity() == SEC_PLAYER)
+                        /*if (isabot && handler->GetSession()->GetSecurity() == SEC_PLAYER)
                         {
                             handler->PSendSysMessage("你的队伍没有必要设置　");
                             handler->SetSentErrorMessage(true);
                             return false;
-                        }
+                        }*/
                         group->RemoveUniqueGroupMemberFlag(MEMBER_FLAG_MAINTANK);
                         Group::MemberSlotList const& members = group->GetMemberSlots();
                         for (Group::MemberSlotList::const_iterator itr = members.begin(); itr != members.end(); ++itr)
