@@ -348,12 +348,12 @@ public:
         void UpdateAI(uint32 diff)
         {
             ReduceCD(diff);
-            if (91109 && GC_Timer <= diff && !me->HasAura(91109) && 
-                doCast(me, 91109))
+            if (95020 && GC_Timer <= diff && !me->HasAura(95020) && 
+                doCast(me, 95020))
                 GC_Timer = 1;
                 
-            if (91111 && GC_Timer <= diff && !me->HasAura(91111) && 
-                doCast(me, 91111))
+            if (95022 && GC_Timer <= diff && !me->HasAura(95022) && 
+                doCast(me, 95022))
                 GC_Timer = 1;
                 
             if (HOFGuid != 0)

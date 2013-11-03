@@ -7274,7 +7274,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
             if (dummySpell->SpellIconID == 2711)
             {
                 basepoints0 = CalculatePct(int32(damage), triggerAmount);
-                triggered_spell_id = 91113;
+                triggered_spell_id = 95024;
                 break;
             }
             // Threat of Thassarian
