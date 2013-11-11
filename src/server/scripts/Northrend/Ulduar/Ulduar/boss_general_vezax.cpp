@@ -122,7 +122,8 @@ class boss_general_vezax : public CreatureScript
                 _EnterCombat();
 
                 //DoCast(me, SPELL_CORRUPTED_RAGE, true);
-                DoCast(SPELL_AURA_OF_DESPAIR);
+                //ÆÁ±Î¾øÍû¹â»·
+                //DoCast(SPELL_AURA_OF_DESPAIR);
                 Talk(SAY_AGGRO);
 
                 events.ScheduleEvent(EVENT_SUMMON_VAPOR, 30*IN_MILLISECONDS);
