@@ -104,26 +104,26 @@ class ulduar_teleporter : public GameObjectScript
 
         bool OnGossipHello(Player* player, GameObject* gameObject)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Expedition Base Camp", GOSSIP_SENDER_MAIN, BASE_CAMP);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到远征军营地　", GOSSIP_SENDER_MAIN, BASE_CAMP);
             if (InstanceScript* instance = gameObject->GetInstanceScript())
             {
                 if (instance->GetData(DATA_COLOSSUS) == 2) //count of 2 collossus death
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Formation Grounds", GOSSIP_SENDER_MAIN, GROUNDS);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到练兵场　", GOSSIP_SENDER_MAIN, GROUNDS);
                 if (instance->GetBossState(BOSS_LEVIATHAN) == DONE)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Colossal Forge", GOSSIP_SENDER_MAIN, FORGE);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到巨人熔炉　", GOSSIP_SENDER_MAIN, FORGE);
                 if (instance->GetBossState(BOSS_XT002) == DONE)
                 {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Scrapyard", GOSSIP_SENDER_MAIN, SCRAPYARD);
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Antechamber of Ulduar", GOSSIP_SENDER_MAIN, ANTECHAMBER);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到废料场　", GOSSIP_SENDER_MAIN, SCRAPYARD);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到奥杜尔前厅　", GOSSIP_SENDER_MAIN, ANTECHAMBER);
                 }
                 if (instance->GetBossState(BOSS_KOLOGARN) == DONE)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Shattered Walkway", GOSSIP_SENDER_MAIN, WALKWAY);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到破碎通道　", GOSSIP_SENDER_MAIN, WALKWAY);
                 if (instance->GetBossState(BOSS_AURIAYA) == DONE)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Conservatory of Life", GOSSIP_SENDER_MAIN, CONSERVATORY);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到生命温室　", GOSSIP_SENDER_MAIN, CONSERVATORY);
                 if (instance->GetBossState(BOSS_FREYA) == DONE)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Spark of Imagination", GOSSIP_SENDER_MAIN, SPARK);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到思想火花　", GOSSIP_SENDER_MAIN, SPARK);
                 if (instance->GetBossState(BOSS_VEZAX) == DONE)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to Descent into Madness", GOSSIP_SENDER_MAIN, MADNESS);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "传送到疯狂阶梯　", GOSSIP_SENDER_MAIN, MADNESS);
             }
 
             player->SEND_GOSSIP_MENU(gameObject->GetGOInfo()->GetGossipMenuId(), gameObject->GetGUID());
