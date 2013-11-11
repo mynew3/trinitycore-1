@@ -97,7 +97,7 @@ public:
                     ////debug
                     //for (uint8 i = 0; i != NUM_RUNE_TYPES; ++i)
                     //    if (runecost[i])
-                    //        TC_LOG_FATAL(LOG_FILTER_PLAYER, "doCast():: DK bot %s has casted spell %u (%s) without %u rune(s) (type %u)!",
+                    //        TC_LOG_FATAL("entities.player", "doCast():: DK bot %s has casted spell %u (%s) without %u rune(s) (type %u)!",
                     //            me->GetName().c_str(), spellId, spellInfo->SpellName[0], runecost[i], i);
                 }
                 //runic power gain: all dk spells are instant but some have no unit target so

@@ -404,7 +404,7 @@ std::string BotHelper::GetLocaleStringForTextID(std::string& textValue, uint32 t
 {
     if (textId >= MAX_STRINGS)
     {
-        TC_LOG_ERROR(LOG_FILTER_PLAYER, "botgiver:GetLocaleStringForTextID:: unknown text id: %u!", uint32(textId));
+        TC_LOG_ERROR("entities.player", "botgiver:GetLocaleStringForTextID:: unknown text id: %u!", uint32(textId));
         return textValue;
     }
 
@@ -413,7 +413,7 @@ std::string BotHelper::GetLocaleStringForTextID(std::string& textValue, uint32 t
 
     if (localeIdx < 0)
     {
-        TC_LOG_ERROR(LOG_FILTER_PLAYER, "botgiver:GetLocaleStringForTextID:: unknown locale: %i! Sending default locale text...", localeIdx);
+        TC_LOG_ERROR("entities.player", "botgiver:GetLocaleStringForTextID:: unknown locale: %i! Sending default locale text...", localeIdx);
         return textValue;
     }
 

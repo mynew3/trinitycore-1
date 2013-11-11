@@ -47,7 +47,7 @@ public:
 
     //static bool HandleReloadEquipsCommand(ChatHandler* handler, const char* /*args*/)
     //{
-    //    sLog->outInfo(LOG_FILTER_GENERAL, "Re-Loading Creature Equips...");
+    //    sLog->outInfo("misc", "Re-Loading Creature Equips...");
     //    sObjectMgr->LoadEquipmentTemplates();
     //    handler->SendGlobalGMSysMessage("DB table `creature_equip_template` (creature equipment) reloaded.");
     //    return true;

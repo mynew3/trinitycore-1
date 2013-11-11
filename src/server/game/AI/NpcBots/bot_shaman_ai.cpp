@@ -151,7 +151,7 @@ public:
                         if (!to)
                         {
                             _totems[i].first = 0;
-                            //TC_LOG_ERROR(LOG_FILTER_PLAYER, "%s has lost totem in slot %u! Despawned normally?", me->GetName().c_str(), i);
+                            //TC_LOG_ERROR("entities.player", "%s has lost totem in slot %u! Despawned normally?", me->GetName().c_str(), i);
                             continue;
                         }
 
@@ -879,7 +879,7 @@ public:
             TempSummon* totem = summon->ToTempSummon();
             if (!totem || !totem->ToTotem())
             {
-                TC_LOG_ERROR(LOG_FILTER_PLAYER, "SummonedCreatureDespawn(): Shaman bot %s has despawned summon %s which is not a temp summon or not a totem...", me->GetName().c_str(), summon->GetName().c_str());
+                TC_LOG_ERROR("entities.player", "SummonedCreatureDespawn(): Shaman bot %s has despawned summon %s which is not a temp summon or not a totem...", me->GetName().c_str(), summon->GetName().c_str());
                 return;
             }
 
@@ -899,7 +899,7 @@ public:
                     slot = T_AIR;
                     break;
                 default:
-                    TC_LOG_ERROR(LOG_FILTER_PLAYER, "SummonedCreatureDespawn(): Shaman bot %s has despawned totem %s with unknown type %u", me->GetName().c_str(), summon->GetName().c_str(), totem->m_Properties->Id);
+                    TC_LOG_ERROR("entities.player", "SummonedCreatureDespawn(): Shaman bot %s has despawned totem %s with unknown type %u", me->GetName().c_str(), summon->GetName().c_str(), totem->m_Properties->Id);
                     return;
             }
 
@@ -911,7 +911,7 @@ public:
             TempSummon* totem = summon->ToTempSummon();
             if (!totem || !totem->ToTotem())
             {
-                TC_LOG_ERROR(LOG_FILTER_PLAYER, "OnBotSummon(): Shaman bot %s has summoned creature %s which is not a temp summon or not a totem...", me->GetName().c_str(), summon->GetName().c_str());
+                TC_LOG_ERROR("entities.player", "OnBotSummon(): Shaman bot %s has summoned creature %s which is not a temp summon or not a totem...", me->GetName().c_str(), summon->GetName().c_str());
                 return;
             }
 
@@ -933,7 +933,7 @@ public:
                     slot = T_AIR;
                     break;
                 default:
-                    TC_LOG_ERROR(LOG_FILTER_PLAYER, "OnBotSummon(): Shaman bot %s has summoned totem %s with unknown type %u", me->GetName().c_str(), summon->GetName().c_str(), totem->m_Properties->Id);
+                    TC_LOG_ERROR("entities.player", "OnBotSummon(): Shaman bot %s has summoned totem %s with unknown type %u", me->GetName().c_str(), summon->GetName().c_str(), totem->m_Properties->Id);
                     return;
             }
 
@@ -946,7 +946,7 @@ public:
             _totems[slot].second.pos.Relocate(*summon);
             _totems[slot].second.effradius = std::max<float>(radius, 20.f) + 5.f;
 
-            //TC_LOG_ERROR(LOG_FILTER_PLAYER, "shaman bot: summoned %s (type %u) at x='%f', y='%f', z='%f'",
+            //TC_LOG_ERROR("entities.player", "shaman bot: summoned %s (type %u) at x='%f', y='%f', z='%f'",
             //    summon->GetName().c_str(), slot, _totems[slot].second.GetPositionX(), _totems[slot].second.GetPositionY(), _totems[slot].second.GetPositionZ());
 
             summon->SetDisplayId(me->GetModelForTotem(PlayerTotemType(totem->m_Properties->Id)));
@@ -1092,7 +1092,7 @@ public:
                     Unit* to = sObjectAccessor->FindUnit(_totems[i].first);
                     if (!to)
                     {
-                        //TC_LOG_ERROR(LOG_FILTER_PLAYER, "%s has no totem in slot %u during remove!", me->GetName().c_str(), i);
+                        //TC_LOG_ERROR("entities.player", "%s has no totem in slot %u during remove!", me->GetName().c_str(), i);
                         continue;
                     }
                     to->ToTotem()->UnSummon();
