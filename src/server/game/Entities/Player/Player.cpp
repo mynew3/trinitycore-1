@@ -22404,7 +22404,8 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
     }
 
     Item* it = bStore ?
-        StoreNewItem(vDest, item, true) :
+        StoreNewItem(vDest, item, true, Item::GenerateItemRandomPropertyId(item)) :
+        //StoreNewItem(vDest, item, true) :
         EquipNewItem(uiDest, item, true);
     if (it)
     {
