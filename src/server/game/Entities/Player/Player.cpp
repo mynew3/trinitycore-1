@@ -1580,7 +1580,11 @@ void Player::Update(uint32 p_time)
 {
     if (!IsInWorld())
         return;
-
+    
+    if(HasAura(95025))
+    {
+    learnSpell(33388, true);
+    }
     // undelivered mail
     if (m_nextMailDelivereTime && m_nextMailDelivereTime <= time(NULL))
     {

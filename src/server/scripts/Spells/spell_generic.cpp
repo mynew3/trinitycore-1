@@ -1897,6 +1897,12 @@ enum Mounts
     SPELL_BLAZING_HIPPOGRYPH_150        = 74854,
     SPELL_BLAZING_HIPPOGRYPH_280        = 74855,
 
+    //´«¼Ò±¦»ð¼ý
+    SPELL_CHUANJIA_0             = 95029,
+    SPELL_CHUANJIA_60            = 95026,
+    SPELL_CHUANJIA_150           = 95027,
+    SPELL_CHUANJIA_310           = 95028,
+    
     // Celestial Steed
     SPELL_CELESTIAL_STEED_60            = 75619,
     SPELL_CELESTIAL_STEED_100           = 75620,
@@ -3676,6 +3682,7 @@ void AddSC_generic_spell_scripts()
     new spell_gen_lifebloom("spell_faction_champion_dru_lifebloom", SPELL_FACTION_CHAMPIONS_DRU_LIFEBLOOM_FINAL_HEAL);
     new spell_gen_magic_rooster();
     new spell_gen_mount("spell_magic_broom", 0, SPELL_MAGIC_BROOM_60, SPELL_MAGIC_BROOM_100, SPELL_MAGIC_BROOM_150, SPELL_MAGIC_BROOM_280);
+    new spell_gen_mount("SPELL_CHUANJIA", 0, SPELL_CHUANJIA_0, SPELL_CHUANJIA_60, SPELL_CHUANJIA_150, SPELL_CHUANJIA_310);
     new spell_gen_mount("spell_headless_horseman_mount", 0, SPELL_HEADLESS_HORSEMAN_MOUNT_60, SPELL_HEADLESS_HORSEMAN_MOUNT_100, SPELL_HEADLESS_HORSEMAN_MOUNT_150, SPELL_HEADLESS_HORSEMAN_MOUNT_280);
     new spell_gen_mount("spell_winged_steed_of_the_ebon_blade", 0, 0, 0, SPELL_WINGED_STEED_150, SPELL_WINGED_STEED_280);
     new spell_gen_mount("spell_big_love_rocket", SPELL_BIG_LOVE_ROCKET_0, SPELL_BIG_LOVE_ROCKET_60, SPELL_BIG_LOVE_ROCKET_100, SPELL_BIG_LOVE_ROCKET_150, SPELL_BIG_LOVE_ROCKET_310);
